@@ -1,0 +1,8 @@
+bin/ 
+obj/ 
+.vs/ 
+*.user 
+*.pfx 
+*.ico 
+packages/ 
+Doc/ 

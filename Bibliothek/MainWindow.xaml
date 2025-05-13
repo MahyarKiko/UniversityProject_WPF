@@ -1,0 +1,19 @@
+﻿<Window x:Class="Bibliothek.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bibliothek"
+        mc:Ignorable="d"
+        Icon="/img/Logo.png"
+        Title="MainWindow" Height="400" Width="400" HorizontalAlignment="Center" VerticalAlignment="Center" WindowStyle="None" AllowsTransparency="True" Background="Transparent">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <Image Source="/img/Logo.png" Width="400"/>
+        </StackPanel>
+    </Grid>
+</Window>
+

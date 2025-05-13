@@ -1,0 +1,251 @@
+﻿<Window x:Class="Bibliothek.Book"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bibliothek"
+        Icon="/img/Logo.png"
+        mc:Ignorable="d"
+        Title="Buch" Height="620" Width="1024" Background="#FF9AC8CD" MaxWidth="1024" MaxHeight="800" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+
+    <!-- Stil für die benutzerdefinierte CheckBox -->
+
+    <Window.Resources>
+
+        <Style x:Key="CardCheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border x:Name="CardBorder" 
+                                CornerRadius="10"
+                                Background="LightGray"
+                                BorderBrush="Gray"
+                                BorderThickness="1"
+                                Padding="10"
+                                Width="200"
+                                Height="50">
+                            <TextBlock x:Name="CardText" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center" 
+                                       Text="Unchecked"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CardBorder" Property="Background" Value="LightGreen"/>
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="Green"/>
+                                <Setter TargetName="CardText" Property="Text" Value="Für mich"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="CardBorder" Property="Background" Value="LightGray"/>
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="Gray"/>
+                                <Setter TargetName="CardText" Property="Text" Value="Für andere"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Stil für Schaltflächen, definiert visuelle Eigenschaften und Vorlagen -->
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#1E0342"/>
+            <Setter Property="Foreground" Value="#000"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="BorderBrush" Value="#A0DEFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <!-- Vorlage für die Schaltfläche -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <!-- Rahmen für die Schaltfläche, nutzt gebundene Eigenschaften für Anpassungen -->
+                        <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}"
+                        CornerRadius="8">
+                            <!-- Inhalt der Schaltfläche, zentriert im Rahmen -->
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <!-- Grid als Hauptcontainer für die Layouts -->
+    <Grid>
+        <Border Background="#FFE1F7F5" CornerRadius="20" Margin="20">
+            <!-- Haupt-StackPanel für die Anordnung der enthaltenen Elemente -->
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                    <!-- CheckBox mit benutzerdefiniertem Stil und Event-Handler für Zustandsänderungen -->
+                    <CheckBox x:Name="chBox_Forme" 
+                          Checked="chBox_Forme_CheckedChange" 
+                          Unchecked="chBox_Forme_CheckedChange" 
+                          Margin="15" 
+                          Style="{StaticResource CardCheckBoxStyle}" 
+                          HorizontalAlignment="Center" 
+                          VerticalAlignment="Center"/>
+                    <TextBox x:Name="SearchTextBox" 
+                         Width="300" 
+                             Height="35"
+                         Margin="15" 
+                         FontSize="15" 
+                         TextChanged="onSearchChange" />
+                    <!-- Label zur Anzeige der Suchfunktion -->
+                    <Label Margin="15" 
+                           VerticalAlignment="Center"
+                       FontSize="15">
+                        Bücher suchen
+                    </Label>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <!-- Umrandung für die Benutzersuche -->
+                    <Border Background="#aacecece" CornerRadius="20" Margin="0, 10,15,0">
+                        <StackPanel x:Name="layout_SelectUser" Margin="5" HorizontalAlignment="Center">
+
+                            <Label FontSize="13" HorizontalAlignment="Center">Benutzer finden</Label>
+                            <!-- Trennlinie -->
+                            <StackPanel Height="2" Background="#FF9AC8CD" Margin="5,10"/>
+                            <!-- StackPanel für die Benutzersuche und Schaltfläche -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBox x:Name="SearchUserTextBox" 
+                                     Width="150" 
+                                     FontSize="20" 
+                                     TextChanged="onSearchChange" />
+                                <Button Content="Suchen" 
+                                    Click="ButtonSearch_Click" 
+                                    Background="LightGreen"/>
+                            </StackPanel>
+                            <!-- DataGrid zur Anzeige der Suchergebnisse -->
+                            <DataGrid x:Name="UsersDataGrid" 
+                                  AutoGenerateColumns="False" 
+                                  HorizontalAlignment="Center" 
+                                  VerticalAlignment="Bottom" 
+                                  MaxHeight="120" 
+                                  Margin="10" 
+                                  SelectionChanged="BooksDataGrid_SelectionChanged" 
+                                  IsReadOnly="True" 
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible">
+                     
+
+                                <DataGrid.Columns>
+
+                                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" Visibility="Collapsed"/>
+
+                                    <DataGridTextColumn Header="Benutzername" Binding="{Binding Email}"/>
+
+                                    <DataGridTextColumn Header="Vorname" Binding="{Binding FirstName}"/>
+
+                                    <DataGridTextColumn Header="Name" Binding="{Binding LastName}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="#aacecece" CornerRadius="20" Margin="15, 10,0,0">
+                        <StackPanel x:Name="layout_Book" Margin="5" HorizontalAlignment="Center">
+                            <Label FontSize="13" HorizontalAlignment="Center">Bücher</Label>
+                            <!-- Trennlinie -->
+                            <StackPanel Height="2" Background="#FF9AC8CD" Margin="5,10"/>
+                            <!-- DataGrid zur Anzeige der Buchinformationen -->
+                            <DataGrid x:Name="BooksDataGrid" 
+                                  AutoGenerateColumns="False" 
+                                  HorizontalAlignment="Center" 
+                                  VerticalAlignment="Bottom" 
+                                  MaxHeight="120" 
+                                  Margin="10" 
+                                  SelectionChanged="BooksDataGrid_SelectionChanged" 
+                                  IsReadOnly="True" 
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible">
+                                <DataGrid.Columns>
+
+                                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" Visibility="Collapsed"/>
+
+                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
+
+                                    <DataGridTextColumn Header="Author" Binding="{Binding Author}"/>
+
+                                    <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}"/>
+
+                                    <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}"/>
+
+                                    <DataGridTextColumn Header="Veröffentlichungsdatum" Binding="{Binding ReleaseDate}"/>
+
+                                    <DataGridTextColumn Header="Verfügbar" Binding="{Binding Available}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+                <!-- Border für das Detail eines Buchs -->
+                <Border x:Name="sp_Detail" Visibility="Collapsed" Background="#aacecece" CornerRadius="20" Margin="15, 40,0,0" HorizontalAlignment="Center">
+                    <!-- StackPanel für die vertikale Anordnung der Elemente -->
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                        <Label FontSize="13" HorizontalAlignment="Center">Gewähltes Buch</Label>
+                        <StackPanel Height="2" Background="#FF9AC8CD" Margin="5,10"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Vertical" Margin="10">
+
+                                <Label FontSize="16">Title</Label>
+
+                                <TextBox x:Name="titleTextBox" Width="300" FontSize="16" IsReadOnly="True"/>
+                            </StackPanel>
+                            <!-- StackPanel für den Autor des Buchs -->
+                            <StackPanel Orientation="Vertical" Margin="10">
+
+                                <Label FontSize="16">Author</Label>
+                                <!-- TextBox für die Eingabe des Autors, nur lesbar -->
+                                <TextBox x:Name="AuthorTextBox" Width="300" FontSize="16" IsReadOnly="True"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                        <!-- StackPanel für die Schaltflächen Buchen und Anlehnen -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Content="Buchen" Style="{StaticResource ButtonStyle}" Background="LightGreen" Click="BuchenButton_Click" Width="100" Height="50" Margin="10"/>
+                            <Button Content="Ablehnen" Style="{StaticResource ButtonStyle}" Background="LightPink" Click="BuchenCancelButton_Click" Width="100" Height="50" Margin="10"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Border>
+                <!-- Border für den Bereich reservierter Bücher -->
+                <Border x:Name="sp_Reserved" Visibility="Collapsed" Background="#aacecece" CornerRadius="20" Margin="0, 20,15,0" HorizontalAlignment="Center">
+                    <!-- StackPanel für die vertikale Anordnung der Inhalte -->
+                    <StackPanel Margin="5" HorizontalAlignment="Center">
+
+                        <Label x:Name="lbl_BookedBook" FontSize="13" HorizontalAlignment="Center"></Label>
+
+                        <StackPanel Height="2" Background="#FF9AC8CD" Margin="5,10"/>
+
+                        <DataGrid x:Name="BookedDataGrid" AutoGenerateColumns="False" HorizontalAlignment="Center" VerticalAlignment="Bottom" MaxHeight="120" Margin="20" IsReadOnly="True" ScrollViewer.VerticalScrollBarVisibility="Visible">
+
+                            <DataGrid.Columns>
+
+                                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Visibility="Collapsed"/>
+
+                                <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
+
+                                <DataGridTextColumn Header="Author" Binding="{Binding Author}"/>
+
+                                <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}"/>
+
+                                <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}"/>
+
+                                <DataGridTextColumn Header="DatumAusleihen" Binding="{Binding ReservedDate}"/>
+
+                                <DataGridTextColumn Header="DatumRückgabe" Binding="{Binding ReturnDate}"/>
+
+                                <DataGridTextColumn Header="Status" Binding="{Binding IsAccept}"/>
+
+                                <DataGridTextColumn Header="Buchungsstatus" Binding="{Binding IsBack}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

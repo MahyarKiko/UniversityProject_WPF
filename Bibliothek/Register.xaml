@@ -1,0 +1,161 @@
+﻿<Window x:Class="Bibliothek.Register"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bibliothek"
+        Icon="/img/Logo.png"
+        mc:Ignorable="d"
+        Title="Register" Height="450" Width="800" Background="#FF9AC8CD" Closed="CloseButton_Click">
+
+    <!-- Styles für Buttons -->
+    <Window.Resources>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#1E0342"/>
+            <Setter Property="Foreground" Value="#FFE1F7F5"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="BorderBrush" Value="#A0DEFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Hauptbereich des Fensters mit abgerundeten Ecken -->
+        <Border Background="#FFE1F7F5" CornerRadius="20" Margin="20" Padding="15">
+            <StackPanel Orientation="Vertical">
+                <!-- Schritt 1 -->
+                <StackPanel Orientation="Vertical" x:Name="layout_step1">
+                    <Label>E-Mail</Label>
+                    <TextBox x:Name="txt_email" Height="40" Margin="15,0,15,15" BorderBrush="#FF0E46A3" TextChanged="ValidateForm">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+
+                    <Label>Passwort</Label>
+                    <PasswordBox x:Name="txt_Password" Height="40" Margin="15,0,15,15" BorderBrush="#FF0E46A3" PasswordChanged="ValidateForm">
+                        <PasswordBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </PasswordBox.Resources>
+                    </PasswordBox>
+
+                    <Label>Passwort wiederholen</Label>
+                    <PasswordBox x:Name="txt_ConfirmPassword" Height="40" Margin="15,0,15,15" BorderBrush="#FF0E46A3" PasswordChanged="ValidateForm">
+                        <PasswordBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </PasswordBox.Resources>
+                    </PasswordBox>
+                </StackPanel>
+
+                <!-- Schritt 2 ==> Vorname und Name -->
+                <StackPanel Orientation="Vertical" x:Name="layout_step2" Visibility="Collapsed">
+                    <Label>Vorname</Label>
+                    <TextBox x:Name="txt_FirstName" Height="40" Margin="15,0,15,15" BorderBrush="#FF0E46A3" TextChanged="ValidateForm">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+
+                    <Label>Name</Label>
+                    <TextBox x:Name="txt_LastName" Height="40" Margin="15,0,15,15" BorderBrush="#FF0E46A3" TextChanged="ValidateForm">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                </StackPanel>
+
+                <!-- Schritt 3  -->
+                <StackPanel Orientation="Vertical" x:Name="layout_step3" Visibility="Collapsed">
+                    <Label>Telefonnummer</Label>
+                    <TextBox x:Name="txt_CellPhone" PreviewTextInput="numericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting" PreviewKeyDown="NumericTextBox_PreviewKeyDown"  Height="40" Margin="15,0,15,15" BorderBrush="#FF0E46A3" TextChanged="ValidateForm">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+
+                    <Label>Adresse</Label>
+                    <TextBox x:Name="txt_Address" Height="40" Margin="15,0,15,15" BorderBrush="#FF0E46A3" GotFocus="txt_Address_GotFocus" TextChanged="ValidateForm">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <StackPanel HorizontalAlignment="Left" Visibility="{Binding ElementName=txt_Country, Path=Visibility}">
+                            <Label Content="Land" HorizontalAlignment="Center"/>
+                            <TextBox x:Name="txt_Country" Height="40" Width="150" Margin="0,5,0,0" BorderBrush="#FF0E46A3" Visibility="Collapsed">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="5"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </StackPanel>
+
+                        <StackPanel HorizontalAlignment="Center" Visibility="{Binding ElementName=txt_City, Path=Visibility}">
+                            <Label Content="Stadt" HorizontalAlignment="Center" />
+                            <TextBox x:Name="txt_City" Height="40" Width="150" Margin="0,5,0,0" BorderBrush="#FF0E46A3" Visibility="Collapsed">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="5"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </StackPanel>
+
+                        <StackPanel HorizontalAlignment="Right" Visibility="{Binding ElementName=txt_PostalCode, Path=Visibility}">
+                            <Label Content="PLZ" HorizontalAlignment="Center" />
+                            <TextBox x:Name="txt_PostalCode" PreviewTextInput="numericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting" PreviewKeyDown="NumericTextBox_PreviewKeyDown" Height="40" Width="150" Margin="0,5,0,0" BorderBrush="#FF0E46A3" Visibility="Collapsed">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="5"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Navigation Buttons -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
+                    <!-- Button to go back -->
+                    <Button x:Name="btn_Back" Margin="5" Style="{StaticResource ButtonStyle}" Visibility="Collapsed" Click="btn_Back_Click">Zurück</Button>
+                    <!-- Button to submit and proceed -->
+                    <Button x:Name="btn_Submit" Background="#1A873A" Margin="5" Style="{StaticResource ButtonStyle}" Click="btn_Submit_Click" IsEnabled="False">Nächste</Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
+
+
